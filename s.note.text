@@ -1,0 +1,10 @@
+s.js : original code 
+s2.js : original code + new switch (partition methods portal, oddes, menu, Images)
+s3.js : minify code from s2.js by two page 
+  1. https://dotmaui.com/jsminify/
+  2. https://obfuscator.io/
+date node a2h.js => hexwords.txt
+_sync.js: backup original code
+sync.js : minify from https://javascriptobfuscator.com/Javascript-Obfuscator.aspx
+
+
