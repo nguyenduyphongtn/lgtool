@@ -11,7 +11,7 @@ module.exports = {
       "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36",
     "Content-type": "text/html"
   },
-  protocol: "http://",
+  protocol: "https://",
   page: "/pgajax.axd?T=SyncImages",
   cfg: require('./switch.cfg'),
   //rootFolderImages: "C:\\Projects\\LIGA_New_v8\\SportDBClient.WebUI\\",
@@ -26,12 +26,12 @@ module.exports = {
   saveFile: function (fileName, fileContent) {
     var me = this,
       fs = me.fs;
-    var folder = "./";
-    if (!fs.existsSync(folder)) {
-      fs.mkdirSync(folder);
-    }
-    fs.writeFile(folder + fileName, fileContent, function (err) {
-      if (err) return me.logErr(err);
+    // var folder = "./";
+    // if (!fs.existsSync(folder)) {
+    //   fs.mkdirSync(folder);
+    // }
+    fs.writeFile(fileName, fileContent, function (err) {
+      if (err) return me.log(err);
       me.log("Write file " + fileName + " > success");
     });
   },
@@ -89,12 +89,19 @@ module.exports = {
       return v.substring(v.indexOf(stringSplit) + 6, v.length);
     });
   },
+  fetchTextFile: async function(url){
+    var options = {
+      uri: url,
+      headers: this.headers,
+    };
+    return await this.rp(options)
+  },
   saveImage: async function (pathImage, host) {
     var me = this,
       fs = me.fs,
       request = me.request,
       log = me.log,
-      rootFolderImages = this.rootFolderImages;
+      rootFolderImages = this.cfg.rootFolderImages;
     var fileName = pathImage.split("/").slice(-1)[0];
     var dir =
       rootFolderImages + pathImage.substring(0, pathImage.indexOf(fileName));
@@ -108,11 +115,22 @@ module.exports = {
 
     var url = me.protocol + host + pathImage;
     //log('url:%s',url)
-    await request(url)
-      .on("error", function (err) {
-        log(err);
-      })
-      .pipe(fs.createWriteStream(rootFolderImages + pathImage));
+    //log('rootFolderImages:%s',rootFolderImages)
+    //log('pathImage:%s',pathImage)
+    switch(fileName.split('.')[1]){
+      case "js":
+      case "css":
+        this.saveFile(rootFolderImages + pathImage, await this.fetchTextFile(url))
+        break;
+      default:
+          await request(url)
+          .on("error", function (err) {
+            log(err);
+          })
+          .pipe(fs.createWriteStream(rootFolderImages + pathImage));
+          break;
+    }
+    //console.log('SaveImage done !')
   },
   saveImages: function (i, paths, host, next) {
     let me = this,
@@ -176,6 +194,9 @@ module.exports = {
 // var sync = require("./sync.js");
 // sync.getSwitchCfg();
 // var sync = require("./sync");
+// sync.saveImage('/Images/theme/v1/header.css','angkasabola.com')
+// sync.saveImage('/Images/theme/v1/js/jquery-1.7.2.min.js','rajaelang.com')
+
 // // var domain = ['localhost/Liga_New_V8/','main00.playliga.com/']
 // // sync.getPaths(domain[0],'WebUI').then((paths)=>{
 // //   console.log(paths)
