@@ -9,7 +9,12 @@ module.exports = {
   headers: {
     "User-Agent":
       "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36",
-    "Content-type": "text/html"
+      "Content-type": "text/html"
+  },
+  headersGzip:{
+    'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36',
+    'Content-type': 'text/html',
+    'Accept-Encoding':'gzip, deflate'
   },
   protocol: "https://",
   page: "/pgajax.axd?T=SyncImages",
@@ -92,10 +97,25 @@ module.exports = {
   fetchTextFile: async function(url){
     var options = {
       uri: url,
-      headers: this.headers,
-    };
-    return await this.rp(options)
+      headers: this.headersGzip,
+      gzip: true
+    }
+    var content = await this.rp(options)
+    //this.log(content);
+    return content
   },
+  // fetchTextFile2: function(url, callback){
+  //   const options = {
+  //     url: url,
+  //     headers: this.headers
+  //   }
+  //   this.request(options, (error, response, body) => {
+  //     if (!error && response.statusCode == 200) {
+  //       this.log(body)
+  //       callback(body)
+  //     }
+  //   });
+  // },
   saveImage: async function (pathImage, host) {
     var me = this,
       fs = me.fs,
@@ -120,7 +140,10 @@ module.exports = {
     switch(fileName.split('.')[1]){
       case "js":
       case "css":
-        this.saveFile(rootFolderImages + pathImage, await this.fetchTextFile(url))
+        this.saveFile(rootFolderImages + pathImage, await this.fetchTextFile(url) )
+        // this.fetchTextFile2(url, function(content){
+        //   this.saveFile(rootFolderImages + pathImage, content);
+        // })
         break;
       default:
           await request(url)
@@ -193,8 +216,9 @@ module.exports = {
 };
 // var sync = require("./sync.js");
 // sync.getSwitchCfg();
-// var sync = require("./sync");
-// sync.saveImage('/Images/theme/v1/header.css','angkasabola.com')
+//var sync = require("./sync");
+//sync.saveImage('/Images/theme/v1/header.css','angkasabola.com')
+//sync.saveImage('/Images/theme/v1/header.css','ligautamawin.org')
 // sync.saveImage('/Images/theme/v1/js/jquery-1.7.2.min.js','rajaelang.com')
 
 // // var domain = ['localhost/Liga_New_V8/','main00.playliga.com/']
