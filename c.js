@@ -391,6 +391,9 @@
           case "header.css":
             copyFile("Images/theme/v1/header.css");
             break;
+          case "index":
+              copyFile("Images/theme/v1/index.html");
+              break;
           case "o":
             require("child_process").exec('start "" "' + dpPath + '"');
             break;
@@ -478,6 +481,7 @@
           case "br":
           case "hcl":
           case "header.css":
+          case "index":
             if (process.argv[3] == "o" || process.argv[3] == "O")
               require("child_process").exec('start "" "' + dpPath + '"');
             else if (process.argv[3] === "z" || process.argv[3] === "Z")

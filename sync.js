@@ -16,7 +16,7 @@ module.exports = {
     'Content-type': 'text/html',
     'Accept-Encoding':'gzip, deflate'
   },
-  protocol: "https://",
+  protocol: "http://",
   page: "/pgajax.axd?T=SyncImages",
   cfg: require('./switch.cfg'),
   //rootFolderImages: "C:\\Projects\\LIGA_New_v8\\SportDBClient.WebUI\\",
