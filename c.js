@@ -409,6 +409,8 @@
     node c wl HDPBET
     =======> copy 3 css file and image of DPBOLA
     ////////////////////////// Small Task ////////////////////////////////
+    node c bkimg HANANA
+    =======> copy Images/ to Images_WLs/Images_HANANA (backup only or commit)
     node c h 23
     =======> copy header23.aspx to deploy folder
     node c d 21
@@ -453,6 +455,8 @@
     node c number 129 o
     node c number HDPBET o
     =======> open header/default number by Visual Studio 
+    node c index
+    =======> copy images/theme/v1/index.html to deployer folder
             `)
             break;
         }
