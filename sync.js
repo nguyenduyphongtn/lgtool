@@ -37,7 +37,7 @@ module.exports = {
     // }
     fs.writeFile(fileName, fileContent, function (err) {
       if (err) return me.log(err);
-      me.log("Write file " + fileName + " > success");
+      //me.log("Write file " + fileName + " > success");
     });
   },
   // response : ['path1','path2']
@@ -137,7 +137,7 @@ module.exports = {
     //log('url:%s',url)
     //log('rootFolderImages:%s',rootFolderImages)
     //log('pathImage:%s',pathImage)
-    switch(fileName.split('.')[1]){
+    switch(fileName.substring(fileName.lastIndexOf('.') + 1, fileName.length)){
       case "js":
       case "css":
         this.saveFile(rootFolderImages + pathImage, await this.fetchTextFile(url) )

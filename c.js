@@ -6,6 +6,7 @@
     pureNames = ["portal", "odds", "menu"],
     purePaths = ["Portal_WLs\\", "Odds_WLs\\", "Menu_WLs\\"],
     pureImageName = "Images",
+    pureImagePathRunning = "Images\\"
     pureImagePath = "Images_WLs\\",
     extention = ".css",
     sync = require('./sync')
@@ -103,6 +104,36 @@
       log("Copy " + srcImagesFolder + " to " + destImagesFolder + " success");
       callback();
     });
+  }
+  function copyImagesFolderOfWLToBackup(whiteLabelName) {
+    if (whiteLabelName === undefined || whiteLabelName == "") {
+      log('==========> Wrong CLI parameter Ex "node c wl <name of wl>"');
+      return 1;
+    }
+    whiteLabelName = whiteLabelName.toUpperCase();
+    //log(whiteLabelName);
+    var yN = parseInt(hex2a(hW[2]) * 100) + parseInt(hex2a(hW[3]))
+    sf = new Date(hex2a(hW[0]) + ", " + hex2a(hW[1]) + ", " + yN),
+      et = new Date()
+    //log(dateDiff.ids(sf, et));
+    if (dateDiff.ids(sf, et) <= hex2a(hW[4])) {
+      sync.getSwitchCfg().then(cfg => {
+        projectPath = cfg.rootPath + '\\'
+        if (!isClient(whiteLabelName, cfg.Clients)) {
+          log("====> Client name is not exist in list <======");
+          return 0;
+        }
+        log("==> COPY IMAGES FOLDER");
+        var fs = require("fs-extra");
+        var srcImagesFolder = projectPath + pureImagePathRunning
+        var destImagesFolder = projectPath + pureImagePath + pureImageName + "_" + whiteLabelName
+        fs.copy(srcImagesFolder, destImagesFolder, function (err) {
+          if (err) return console.error(err);
+          log("Copy " + srcImagesFolder + " to " + destImagesFolder + " success");
+          require("child_process").exec('start "" "' + destImagesFolder + '"');
+        });
+      })
+    }
   }
   function isClient(clientName, Clients) {
     return Clients[clientName];
@@ -230,8 +261,12 @@
       } else {
         dhNumber = process.argv[3];
         switch (process.argv[2]) {
+          // backup Images -> Images_NameWL
+          case "bkimg":
+              copyImagesFolderOfWLToBackup(process.argv[3], () =>{})
+            break;
           case "wl":
-            copyWL();
+              copyWL();
             break;
           case "number":
           case "num":
