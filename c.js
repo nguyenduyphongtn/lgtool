@@ -279,12 +279,13 @@
             //   log(error)
             //   paramWL = process.argv[3]
             // }
+            
             var sync = require('./sync')
-            if (isNaN(parseInt(process.argv[3]))) {
-              paramWL = process.argv[3]
-              paramWL = paramWL.toUpperCase()
-              log(paramWL)
-              sync.getDHNumber(paramWL).then(json => {
+            if (process.argv[3].match(/[a-z]/i)) {
+              nameWL = process.argv[3]
+              nameWL = nameWL.toUpperCase()
+              log(nameWL)
+              sync.getDHNumber(nameWL).then(json => {
                 log(json)
                 switch (process.argv[4]) {
                   case "o": {
