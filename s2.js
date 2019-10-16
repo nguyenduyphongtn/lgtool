@@ -216,9 +216,21 @@
 				}
 				else {
 					// ========= TEST function loop done
+					var srcImagesFolder = rootPath + pureImagePath + pureImageName + '_' + nameClientSwitchTo;
 					rimraf(rootPath + pureImageName, function () {
 						sync.saveImages(0, paths, host, function () {
-							callback();
+							// backup automatic Images_WLs/Images<white label name>
+							// don't delete Images_WLs/Images_... folder
+							//rimraf(srcImagesFolder, function () {
+								var fs = require("fs-extra");
+								var destImagesFolder = rootPath + pureImageName;
+								log('Deleted %s', srcImagesFolder)								
+								fs.copy(destImagesFolder, srcImagesFolder, function (err) {
+									if (err) return console.error(err)
+									log('Backup ' + pureImageName + ' to ' + pureImageName +  '_' + nameClientSwitchTo + ' success')
+									callback();
+								})
+							//})
 						});
 					});
 				}
