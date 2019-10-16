@@ -1,5 +1,5 @@
 (function () {
-  var fs = require("fs"),
+  let fs = require("fs"),
     projectPath = require("./switch.cfg").rootPath,
     copyPath = require("./switch.cfg").copyPath,
     dpPath = require("./switch.cfg").dpPath,
@@ -9,8 +9,8 @@
     pureImagePathRunning = "Images\\"
     pureImagePath = "Images_WLs\\",
     extention = ".css",
-    sync = require('./sync')
-  log = console.log;
+    sync = require('./sync'),
+    log = console.log;
 
   function copyCSSFiles(whiteLabelName, switchedWhiteLabelName, callback) {
     if (switchedWhiteLabelName) switchedWhiteLabelName = switchedWhiteLabelName.toUpperCase()
@@ -280,7 +280,7 @@
             //   paramWL = process.argv[3]
             // }
             
-            var sync = require('./sync')
+            //var sync = require('./sync')
             if (process.argv[3].match(/[a-z]/i)) {
               nameWL = process.argv[3]
               nameWL = nameWL.toUpperCase()
@@ -319,7 +319,7 @@
           // create list file new wl to use auto complete 
           case "gen":
             log('gen')
-            var sync = require('./sync')
+            //var sync = require('./sync')
             if (process.argv[3] == "WLs") {
               var clients = []
               sync.getSwitchCfg().then(json => {
@@ -372,7 +372,13 @@
             copyFile("Main.aspx");
             break;
           case "dw":
-            copyFile("_View/ReqCredit1.aspx", dhNumber);
+            copyFile("_View/ReqCredit1.aspx");
+            copyFile("_View/WashCredit1.aspx");
+            break;
+          case "deposit":
+            copyFile("_View/ReqCredit1.aspx");
+            break;
+          case "withdraw":
             copyFile("_View/WashCredit1.aspx");
             break;
           case "hcl":
@@ -395,6 +401,27 @@
           case "index":
               copyFile("Images/theme/v1/index.html");
               break;
+          case "ct":
+          case "comptype":
+            sync.getSwitchCfg().then(json => {
+              var clients = json.Clients
+              var compTypeNumber = parseInt(process.argv[3])
+              log(compTypeNumber)
+              Object.keys(clients).forEach(function (nameWL) {
+                if (clients[nameWL].compType === compTypeNumber) {
+                  log('%s:', nameWL)
+                  log(clients[nameWL])
+                  switch (process.argv[4]) {
+                    case "o":
+                      openDHFile("Default", clients[nameWL].defaultNumber)
+                      openDHFile("Header", clients[nameWL].headerNumber)
+                      break
+                  }
+                  return
+                }
+              })
+            })
+            break;
           case "o":
             require("child_process").exec('start "" "' + dpPath + '"');
             break;
@@ -429,7 +456,9 @@
     node c r
     =======> copy Left.aspx and Right.aspx to deploy folder
     node c dw
-    =======> copy ReqCredit1.aspx and WashCredit1.aspx to deploy folder
+    node c deposit
+    node c withdraw
+    =======> copy ReqCredit1.aspx(Deposit) and WashCredit1.aspx(Withdraw) to deploy folder
     node c hcl
     node c h
     node c c
@@ -458,6 +487,8 @@
     =======> open header/default number by Visual Studio 
     node c index
     =======> copy images/theme/v1/index.html to deployer folder
+    node c ct 123
+    =======> Check info of comtype number = 123
             `)
             break;
         }
