@@ -436,6 +436,8 @@
     =======> create new odds, portal, menu and Image folder of new WL BUNGIO99, refer from DPBOLA
     node c wl HDPBET
     =======> copy 3 css file and image of DPBOLA
+    node c gen WLs
+    =======> gen latest all WLs for autocomplete command feature
     ////////////////////////// Small Task ////////////////////////////////
     node c bkimg HANANA
     =======> copy Images/ to Images_WLs/Images_HANANA (backup only or commit)
