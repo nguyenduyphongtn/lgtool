@@ -216,10 +216,13 @@
       switch (typeFile) {
         case "Header":
         case "Default":
-          fileName = "\\" + typeFile + numberFile + ".aspx";
+          fileName = "/" + typeFile + "s/" + typeFile + numberFile + '.aspx';
+          break;
+        case "seo":
+          fileName = "/SEO/DM" + numberFile + '.ascx';
           break;
         default:
-          fileName = "\\" + typeFile;
+          fileName = "/" + typeFile;
       }
       // create sub folder
       let path = dpPath + fileName;
@@ -230,17 +233,17 @@
       }
       let rs = fs.createReadStream(projectPath + fileName)
       rs.on("error", function () {
-        switch (typeFile) {
-          case "Header":
-          case "Default":
-            copyFile(typeFile + "s/" + typeFile + numberFile + '.aspx');
-            break;
-        }
+        // switch (typeFile) {
+        //   case "Header":
+        //   case "Default":
+        //     copyFile(typeFile + "s/" + typeFile + numberFile + '.aspx');
+        //     break;
+        // }
       });
       // rs.on('readable') => wirte empty file
       rs.on('open', function () {
         rs.pipe(fs.createWriteStream(dpPath + fileName))
-        log("Copy" + fileName + " success");
+        log("Copy " + fileName + " success");
       })
 
     } catch (error) {
@@ -399,8 +402,11 @@
             copyFile("Images/theme/v1/header.css");
             break;
           case "index":
-              copyFile("Images/theme/v1/index.html");
-              break;
+            copyFile("Images/theme/v1/index.html");
+            break;
+          case "seo":
+            copyFile("seo", dhNumber);
+            break;
           case "ct":
           case "comptype":
             sync.getSwitchCfg().then(json => {
@@ -489,6 +495,8 @@
     =======> open header/default number by Visual Studio 
     node c index
     =======> copy images/theme/v1/index.html to deployer folder
+    node c seo 97
+    =======> copy SEO/DM97.ascx to deployer folder
     node c ct 123
     =======> Check info of comtype number = 123
             `)
