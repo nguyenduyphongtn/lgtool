@@ -45,7 +45,7 @@ module.exports = {
     var me = this,
       log = console.log,
       rp = me.rp;
-    var protocol = me.protocol;
+    var protocol = me.cfg.protocol;
     var page = me.page;
     // var url = protocol + host + page;
     var options = {
@@ -175,7 +175,8 @@ module.exports = {
     var me = this,
       rp = me.rp,
       log = me.log,
-      url = me.cfg.urlProject === undefined ? 'http://localhost/LIGA_New_v8/' : me.cfg.urlProject,
+      //url = me.cfg.urlProject === undefined ? 'http://localhost/LIGA_New_v8/' : me.cfg.urlProject,
+      url = me.cfg.urlProject
       url = url + 'pgajax.axd?T=GetSwitchCfg',
       options = {
         uri: url,

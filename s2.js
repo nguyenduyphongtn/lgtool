@@ -194,8 +194,8 @@
 				var prefix = "www."
 				var domain = process.argv[2]
 				host = prefix + domain + ".com"
-				log('Sync from domain: %s', host)
 			}
+			log('Sync from domain: %s', host)
 			host += '/'
 			sync.getPaths(host, "WebUI").then(paths => {
 				if (paths.length === 0) {
