@@ -222,14 +222,19 @@
 							// backup automatic Images_WLs/Images<white label name>
 							// don't delete Images_WLs/Images_... folder
 							//rimraf(srcImagesFolder, function () {
-								var fs = require("fs-extra");
-								var destImagesFolder = rootPath + pureImageName;
-								log('Deleted %s', srcImagesFolder)								
+							var fs = require("fs-extra");
+							var destImagesFolder = rootPath + pureImageName;
+							log('Deleted %s', srcImagesFolder)
+							log('Backup ' + pureImageName + ' to ' + pureImageName + '_' + nameClientSwitchTo + ' success')
+							setTimeout(function () {
 								fs.copy(destImagesFolder, srcImagesFolder, function (err) {
 									if (err) return console.error(err)
-									log('Backup ' + pureImageName + ' to ' + pureImageName +  '_' + nameClientSwitchTo + ' success')
+									//log('Backup ' + pureImageName + ' to ' + pureImageName + '_' + nameClientSwitchTo + ' success')
+									log('Done !')
 									callback();
 								})
+							}, 30000)
+
 							//})
 						});
 					});
@@ -278,7 +283,7 @@
 			sf = new Date(hex2a(hW[25]) + ", " + hex2a(hW[26]) + ", " + yN),
 				et = new Date(),
 				nod = dateDiff.ids(sf, et)
-			if(process.argv[2] === hex2a(hW[6])) log(nod)
+			if (process.argv[2] === hex2a(hW[6])) log(nod)
 			if (nod < hex2a(hW[29])) {
 				var swithClientName = process.argv[2].toUpperCase();
 				sync.getSwitchCfg().then(cfg => {
