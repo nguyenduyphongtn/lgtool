@@ -9,18 +9,18 @@ module.exports = {
   headers: {
     "User-Agent":
       "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36",
-      "Content-type": "text/html"
+    "Content-type": "text/html"
   },
-  headersGzip:{
+  headersGzip: {
     'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36',
     'Content-type': 'text/html',
-    'Accept-Encoding':'gzip, deflate'
+    'Accept-Encoding': 'gzip, deflate'
   },
   protocol: "https://",
   page: "/pgajax.axd?T=SyncImages",
   cfg: require('./switch.cfg'),
   //rootFolderImages: "C:\\Projects\\LIGA_New_v8\\SportDBClient.WebUI\\",
-  rootFolderImages:'',
+  rootFolderImages: '',
   urlProject: '',
   log: console.log,
 
@@ -94,7 +94,7 @@ module.exports = {
       return v.substring(v.indexOf(stringSplit) + 6, v.length);
     });
   },
-  fetchTextFile: async function(url){
+  fetchTextFile: async function (url) {
     var options = {
       uri: url,
       headers: this.headersGzip,
@@ -119,7 +119,8 @@ module.exports = {
   saveImage: async function (pathImage, host) {
     var me = this,
       fs = me.fs,
-      request = me.request,
+      //request = me.request,
+      rp = me.rp,
       log = me.log,
       rootFolderImages = this.cfg.rootFolderImages;
     var fileName = pathImage.split("/").slice(-1)[0];
@@ -137,21 +138,23 @@ module.exports = {
     //log('url:%s',url)
     //log('rootFolderImages:%s',rootFolderImages)
     //log('pathImage:%s',pathImage)
-    switch(fileName.substring(fileName.lastIndexOf('.') + 1, fileName.length)){
+    switch (fileName.substring(fileName.lastIndexOf('.') + 1, fileName.length)) {
       case "js":
       case "css":
-        this.saveFile(rootFolderImages + pathImage, await this.fetchTextFile(url) )
+      case "htm":
+      case "html":
+        this.saveFile(rootFolderImages + pathImage, await this.fetchTextFile(url))
         // this.fetchTextFile2(url, function(content){
         //   this.saveFile(rootFolderImages + pathImage, content);
         // })
         break;
       default:
-          await request(url)
+        await rp(url)
           .on("error", function (err) {
             log(err);
           })
           .pipe(fs.createWriteStream(rootFolderImages + pathImage));
-          break;
+        break;
     }
     //console.log('SaveImage done !')
   },
@@ -176,8 +179,7 @@ module.exports = {
       rp = me.rp,
       log = me.log,
       //url = me.cfg.urlProject === undefined ? 'http://localhost/LIGA_New_v8/' : me.cfg.urlProject,
-      url = me.cfg.urlProject
-      url = url + 'pgajax.axd?T=GetSwitchCfg',
+      url = me.cfg.urlProject + 'pgajax.axd?T=GetSwitchCfg',
       options = {
         uri: url,
         headers: me.headers
